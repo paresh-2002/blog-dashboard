@@ -76,12 +76,17 @@ submit.addEventListener("click", async function (e) {
           {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
+            body: JSON.stringify({
+              userId,
+              title,
+              body,
+            }),
           }
         );
         if (!res.ok) throw new Error("Failed to update post");
         const updatedPost = await res.json();
         updatePostLocally(updatedPost);
+        console.log(updatedPost);
       } else {
         let storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
         const updatedPost = storedPosts.find(
@@ -185,6 +190,7 @@ function renderPostsWithUsers(allPosts) {
           e.stopPropagation();
           isEditMode = true;
           currentEditPostId = post.id;
+          userId = post.userId;
           postTitle.value = post.title;
           postBody.value = post.body;
           addForm.style.display = "block";
