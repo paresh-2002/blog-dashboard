@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog Dashboard</title>
+    <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+    <main class="main">
+        <section class="sidebar">
+            <div class="side-logo"><a href="/">
+                    <img src="./images/man-removebg-preview.png" alt="Logo" width="30px">
+                </a></div>
+            <ul>
+                <li class="active" id="postsTab">
+                    <img src="./images/list.png" alt="List">
+                    Posts
+                </li>
+                <li id="usersTab">
+                    <img src="./images/user.png" alt="user">
+                    Users
+                </li>
+            </ul>
+        </section>
+
+        <section class="contain">
+            <header>
+                <h1>Blog Dashboard</h1>
+            </header>
+
+            <!-- Posts Section -->
+            <div id="posts">
+                <div class="end-btn-container">
+                    <button class="add-btn" id="addItem">Add New</button>
+                </div>
+                <div class="card-container" id="cards"></div>
+            </div>
+
+            <div class="users" id="users">
+                <div class="user-container" id="userContainer"></div>
+            </div>
+
+            <div class="form" id="form">
+                <form id="addPostForm">
+                    <h2>Add Post</h2>
+                    <label for="postTitle">Title</label>
+                    <input type="text" id="postTitle" name="postTitle" placeholder="Enter post title" required>
+
+                    <label for="postBody">Body</label>
+                    <textarea id="postBody" name="postBody" placeholder="Enter post body" rows="5" required></textarea>
+                    <button type="submit" class="add-btn" id="submit">ADD</button>
+                </form>
+            </div>
+            <!-- User Modal -->
+            <div id="userModal" class="modal">
+                <div class="modal-content">
+                    <span id="closeModal" class="close">&times;</span>
+                    <div id="modalUserDetail"></div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <script src="index.js"></script>
+</body>
+
+</html>
