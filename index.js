@@ -12,7 +12,7 @@ const isActive = document.querySelector(".sidebar ul li");
 const closeModal = document.getElementById("closeModal");
 const modal = document.getElementById("userModal");
 const modalContent = document.getElementById("modalUserDetail");
-
+const formTitle = document.getElementById("formTitle");
 let allData = [];
 let currentEditPostId = null;
 let isEditMode = false;
@@ -48,6 +48,7 @@ addNewPost.addEventListener("click", () => {
   posts.style.display = "none";
   listItems.forEach((li) => li.classList.remove("active"));
   submit.innerText = "ADD";
+  formTitle.innerText = "Add Post";
 });
 
 submit.addEventListener("click", async function (e) {
@@ -190,6 +191,7 @@ function renderPostsWithUsers(allPosts) {
           posts.style.display = "none";
           listItems.forEach((li) => li.classList.remove("active"));
           submit.innerText = "Update";
+          formTitle.innerText = "Update Post";
         },
         true
       );
