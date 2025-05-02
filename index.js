@@ -86,7 +86,6 @@ submit.addEventListener("click", async function (e) {
         if (!res.ok) throw new Error("Failed to update post");
         const updatedPost = await res.json();
         updatePostLocally(updatedPost);
-        console.log(updatedPost);
       } else {
         let storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
         const updatedPost = storedPosts.find(
