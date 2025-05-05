@@ -131,6 +131,10 @@ function getData() {
 
 function renderPostsWithUsers(post) {
   cards.innerHTML = "";
+  if (!post || post.length === 0) {
+    cards.innerHTML = '<p class="foundMgs">Posts is Empty</p>';
+    return;
+  }
   post.forEach((post) => {
     const userXhr = new XMLHttpRequest();
     userXhr.open(
@@ -232,6 +236,10 @@ function getAllUsers() {
 }
 
 function renderUser(user) {
+  if (!user || user.length === 0) {
+    userDetail.innerHTML = '<p class="foundMgs">Posts is Empty</p>';
+    return;
+  }
   const card = document.createElement("div");
   card.innerHTML = `
     <div class="user-card" data-id="${user.id}">
