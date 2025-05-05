@@ -1,52 +1,45 @@
-const elements = {
-  cards: document.getElementById("cards"),
-  users: document.getElementById("users"),
-  userDetail: document.getElementById("userContainer"),
-  posts: document.getElementById("posts"),
-  addForm: document.getElementById("form"),
-  postTitle: document.getElementById("postTitle"),
-  postBody: document.getElementById("postBody"),
-  submit: document.getElementById("submit"),
-  addNewPost: document.getElementById("addItem"),
-  listItems: document.querySelectorAll(".sidebar ul li"),
-  modal: document.getElementById("userModal"),
-  modalContent: document.getElementById("modalUserDetail"),
-  formTitle: document.getElementById("formTitle"),
-  isActive: document.querySelector(".sidebar ul li"),
-};
+cards = document.getElementById("cards");
+users = document.getElementById("users");
+userDetail = document.getElementById("userContainer");
+posts = document.getElementById("posts");
+addForm = document.getElementById("form");
+postTitle = document.getElementById("postTitle");
+postBody = document.getElementById("postBody");
+submit = document.getElementById("submit");
+addNewPost = document.getElementById("addItem");
+listItems = document.querySelectorAll(".sidebar ul li");
+modal = document.getElementById("userModal");
+modalContent = document.getElementById("modalUserDetail");
+formTitle = document.getElementById("formTitle");
+isActive = document.querySelector(".sidebar ul li");
 
 let allData = [];
 let currentEditPostId = null;
 let isEditMode = false;
 
-// DOM Ready
-
 document.addEventListener("DOMContentLoaded", () => {
-  elements.listItems.forEach((item) => {
+  listItems.forEach((item) => {
     item.addEventListener("click", () => handleTabChange(item));
   });
   getData();
 });
 
-elements.addNewPost.addEventListener("click", showAddForm);
-elements.submit.addEventListener("click", handleFormSubmit);
+addNewPost.addEventListener("click", showAddForm);
+submit.addEventListener("click", handleFormSubmit);
 document.getElementById("closeModal").addEventListener("click", closeUserModal);
 document
   .querySelector(".modal-content")
   .addEventListener("click", (e) => e.stopPropagation());
-window.addEventListener(
-  "click",
-  (e) => e.target === elements.modal && closeUserModal()
-);
+window.addEventListener("click", (e) => e.target === modal && closeUserModal());
 
 function handleTabChange(item) {
-  elements.listItems.forEach((li) => li.classList.remove("active"));
+  listItems.forEach((li) => li.classList.remove("active"));
   item.classList.add("active");
 
   const tab = item.textContent.trim();
-  elements.users.style.display = tab === "Users" ? "block" : "none";
-  elements.posts.style.display = tab === "Posts" ? "block" : "none";
-  elements.addForm.style.display = "none";
+  users.style.display = tab === "Users" ? "block" : "none";
+  posts.style.display = tab === "Posts" ? "block" : "none";
+  addForm.style.display = "none";
 
   if (tab === "Users") getAllUsers();
 }
@@ -54,23 +47,22 @@ function handleTabChange(item) {
 function showAddForm() {
   isEditMode = false;
   currentEditPostId = null;
-  elements.postTitle.value = "";
-  elements.postBody.value = "";
-  elements.addForm.style.display = "block";
-  elements.posts.style.display = "none";
-  elements.listItems.forEach((li) => li.classList.remove("active"));
-  elements.submit.innerText = "ADD";
-  elements.formTitle.innerText = "Add Post";
+  postTitle.value = "";
+  postBody.value = "";
+  addForm.style.display = "block";
+  posts.style.display = "none";
+  listItems.forEach((li) => li.classList.remove("active"));
+  submit.innerText = "ADD";
+  formTitle.innerText = "Add Post";
 }
 
 async function handleFormSubmit(e) {
   e.preventDefault();
-  const title = elements.postTitle.value.trim();
-  const body = elements.postBody.value.trim();
+  const title = postTitle.value.trim();
+  const body = postBody.value.trim();
   if (!title || !body) return alert("Fields are required");
 
   const data = { userId: Math.floor(Math.random() * 10) + 1, title, body };
-
   try {
     let res, newPost;
     if (isEditMode && currentEditPostId !== null) {
@@ -80,12 +72,12 @@ async function handleFormSubmit(e) {
           {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...data, userId: data.userId }),
+            body: JSON.stringify({ ...data, userId }),
           }
         );
         if (!res.ok) throw new Error("Failed to update post");
         newPost = await res.json();
-        updatePostLocally(newPost);
+        updatePost(newPost);
       } else {
         let storedPosts = JSON.parse(localStorage.getItem("posts")) || [];
         const updatedPost = storedPosts.find(
@@ -94,11 +86,11 @@ async function handleFormSubmit(e) {
         if (updatedPost) {
           updatedPost.title = title;
           updatedPost.body = body;
-          updatePostLocally(updatedPost);
+          updatePost(updatedPost);
         }
       }
       alert("Post updated successfully");
-      elements.isActive.classList.add("active");
+      isActive.classList.add("active");
     } else {
       res = await fetch("https://jsonplaceholder.typicode.com/posts", {
         method: "POST",
@@ -107,15 +99,15 @@ async function handleFormSubmit(e) {
       });
       if (!res.ok) throw new Error("Failed to add post");
       newPost = await res.json();
-      addPostLocally(newPost);
+      addPost(newPost);
       alert("Post added successfully");
-      elements.isActive.classList.add("active");
+      isActive.classList.add("active");
     }
 
-    elements.postTitle.value = "";
-    elements.postBody.value = "";
-    elements.addForm.style.display = "none";
-    elements.posts.style.display = "block";
+    postTitle.value = "";
+    postBody.value = "";
+    addForm.style.display = "none";
+    posts.style.display = "block";
     renderPostsWithUsers(allData);
   } catch (error) {
     console.error("Error:", error);
@@ -123,7 +115,7 @@ async function handleFormSubmit(e) {
 }
 
 function getData() {
-  elements.cards.innerHTML = '<p class="loading">Loading...</p>';
+  cards.innerHTML = '<p class="loading">Loading...</p>';
   fetch("https://jsonplaceholder.typicode.com/posts")
     .then((res) => res.json())
     .then((fetchedPosts) => {
@@ -133,13 +125,13 @@ function getData() {
     })
     .catch((error) => {
       console.error("Error:", error);
-      elements.cards.innerHTML = "<p>Failed to load data.</p>";
+      cards.innerHTML = "<p>Failed to load data.</p>";
     });
 }
 
-function renderPostsWithUsers(posts) {
-  elements.cards.innerHTML = "";
-  posts.forEach((post) => {
+function renderPostsWithUsers(post) {
+  cards.innerHTML = "";
+  post.forEach((post) => {
     const userXhr = new XMLHttpRequest();
     userXhr.open(
       "GET",
@@ -172,20 +164,25 @@ function renderPostsWithUsers(posts) {
         deletePost(post.id, postCard);
       });
 
-      postCard.querySelector(".edit-btn").addEventListener("click", (e) => {
-        e.stopPropagation();
-        isEditMode = true;
-        currentEditPostId = post.id;
-        elements.postTitle.value = post.title;
-        elements.postBody.value = post.body;
-        elements.addForm.style.display = "block";
-        elements.posts.style.display = "none";
-        elements.listItems.forEach((li) => li.classList.remove("active"));
-        elements.submit.innerText = "Update";
-        elements.formTitle.innerText = "Update Post";
-      });
+      postCard.querySelector(".edit-btn").addEventListener(
+        "click",
+        (e) => {
+          e.stopPropagation();
+          isEditMode = true;
+          currentEditPostId = post.id;
+          userId = post.userId;
+          postTitle.value = post.title;
+          postBody.value = post.body;
+          addForm.style.display = "block";
+          posts.style.display = "none";
+          listItems.forEach((li) => li.classList.remove("active"));
+          submit.innerText = "Update";
+          formTitle.innerText = "Update Post";
+        },
+        true
+      );
 
-      elements.cards.appendChild(postCard);
+      cards.appendChild(postCard);
     };
     userXhr.onerror = () =>
       console.error("Failed to fetch user for post:", post.id);
@@ -209,14 +206,14 @@ function deletePost(id, card) {
     .catch((error) => console.error("Delete error:", error));
 }
 
-function updatePostLocally(updatedPost) {
+function updatePost(updatedPost) {
   let stored = JSON.parse(localStorage.getItem("posts")) || [];
   stored = stored.map((p) => (p.id === updatedPost.id ? updatedPost : p));
   localStorage.setItem("posts", JSON.stringify(stored));
   allData = allData.map((p) => (p.id === updatedPost.id ? updatedPost : p));
 }
 
-function addPostLocally(post) {
+function addPost(post) {
   let stored = JSON.parse(localStorage.getItem("posts")) || [];
   const fullPost = { ...post, id: Date.now() };
   stored.unshift(fullPost);
@@ -228,7 +225,7 @@ function getAllUsers() {
   fetch("https://jsonplaceholder.typicode.com/users")
     .then((res) => res.json())
     .then((data) => {
-      elements.userDetail.innerHTML = "";
+      userDetail.innerHTML = "";
       data.forEach(renderUser);
     })
     .catch((error) => console.error("Failed to fetch users:", error));
@@ -254,11 +251,11 @@ function renderUser(user) {
   card
     .querySelector(".delete-btn")
     .addEventListener("click", () => card.remove());
-  elements.userDetail.appendChild(card);
+  userDetail.appendChild(card);
 }
 
 function showUserModal(user) {
-  elements.modalContent.innerHTML = `
+  modalContent.innerHTML = `
     <div class="user-card">
       <div class="user-header">
         <h2 class="user-name">${user.name}</h2>
@@ -270,9 +267,9 @@ function showUserModal(user) {
         <p><strong>Company:</strong> ${user.company.name}</p>
       </div>
     </div>`;
-  elements.modal.style.display = "flex";
+  modal.style.display = "flex";
 }
 
 function closeUserModal() {
-  elements.modal.style.display = "none";
+  modal.style.display = "none";
 }
