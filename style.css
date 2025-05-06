@@ -361,8 +361,7 @@ header h1 {
     box-shadow: none;
 }
 
-/* Responsive Design */
-/* @media (max-width: 768px) {
+@media (max-width: 768px) {
     .user-container {
         flex-direction: column;
         padding: 20px 10%;
@@ -371,12 +370,11 @@ header h1 {
     .user-card {
         width: 100%;
         margin-bottom: 20px;
-        
-    }
-} */
 
-/* Responsive design */
-/* @media (max-width: 768px) {
+    }
+}
+
+@media (max-width: 425px) {
     .main {
         flex-direction: column;
     }
@@ -398,4 +396,4 @@ header h1 {
         width: 90%;
         height: auto;
     }
-} */
+}
